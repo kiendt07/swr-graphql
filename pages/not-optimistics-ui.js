@@ -21,14 +21,14 @@ export default function NotOptimisticUI() {
     event.preventDefault()
 
     setLoading(true);
-    // send text to the API
+    // updating the data remotely, by calling the API
     const mutation = {
       'query': 'mutation users($name: String!) { insert_users(objects: [{name: $name}]) { affected_rows } }',
       'variables': { name: text }
     };
     await fetch(mutation);
 
-    // revalidate
+    // revalidate to update the data locally
     await trigger(mutation);
 
     setLoading(false);
@@ -37,7 +37,10 @@ export default function NotOptimisticUI() {
 
   return <div>
     <h1>NOT Optimistic UI</h1>
-    <p style={{ color: '#777' }}>Notice that there's no loading, as updates are too fast it's invisible to human's eye</p>
+    <p style={{ color: '#777' }}>
+      This is a normal way to update something both remotely and locally
+    </p>
+
     <form onSubmit={handleSubmit}>
       <input
         type="text"
