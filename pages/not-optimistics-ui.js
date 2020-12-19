@@ -14,24 +14,27 @@ const getData = async (...args) => {
 
 export default function NotOptimisticUI() {
   const [text, setText] = React.useState('');
-  const [loading, setLoading] = React.useState(false);
+  const [loadingCreate, setLoadingCreate] = React.useState(false);
+  const [loadingList, setLoadingList] = React.useState(false);
   const { data } = useSWR(query, getData)
 
   async function handleSubmit(event) {
     event.preventDefault()
 
-    setLoading(true);
+    setLoadingCreate(true);
     // updating the data remotely, by calling the API
     const mutation = {
       'query': 'mutation users($name: String!) { insert_users(objects: [{name: $name}]) { affected_rows } }',
       'variables': { name: text }
     };
     await fetch(mutation);
+    setLoadingCreate(false);
 
+    setLoadingList(true);
     // revalidate to update the data locally
     await trigger(mutation);
+    setLoadingList(false);
 
-    setLoading(false);
     setText('');
   }
 
@@ -49,7 +52,8 @@ export default function NotOptimisticUI() {
       />
       <button>Create Message</button>
     </form>
-    {loading && <p>loading...</p>}
+    {loadingCreate && <p>Creating new message...</p>}
+    {loadingList && <p>Loading the list with new message...</p>}
     <ul>
       {data ? data.users.map(user => <li key={user.id}>{user.name}</li>) : 'loading...'}
     </ul>
