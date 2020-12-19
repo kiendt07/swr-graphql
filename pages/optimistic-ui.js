@@ -14,24 +14,25 @@ const getData = async(...args) => {
 
 export default function OptimisticUI() {
   const [text, setText] = React.useState('');
+  const [loading, setLoading] = React.useState(false);
   const { data } = useSWR(query, getData)
 
   async function handleSubmit(event) {
     event.preventDefault();
 
-    // mutate current data to optimistically update the UI
-    mutate(query, { users: [{ id: uuidv4(), name: text }, ...data.users]}, false)
-
-    // remotely update the data
+    setLoading(true);
+    // updating the data remotely, by calling the API
     const mutation = {
       'query': 'mutation users($name: String!) { insert_users(objects: [{name: $name}]) { affected_rows } }',
-      'variables': { name: text}
+      'variables': { name: text }
     };
     await fetch(mutation);
 
-    // revalidate
-    trigger(mutation);
-    setText('')
+    // revalidate to update the data locally
+    await trigger(mutation);
+
+    setLoading(false);
+    setText('');
   }
 
   return <div>
@@ -45,6 +46,7 @@ export default function OptimisticUI() {
       />
       <button>Create Message</button>
     </form>
+    {loading && <p>loading...</p>}
     <ul>
       {data ? data.users.map(user => <li key={user.id}>{user.name}</li>) : 'loading...'}
     </ul>
