@@ -50,10 +50,10 @@ export default function NotOptimisticUI() {
         onChange={event => setText(event.target.value)}
         value={text}
       />
-      <button>Create Message</button>
+      <button>Create User</button>
     </form>
-    {loadingCreate && <p>Creating new message...</p>}
-    {loadingList && <p>Loading the list with new message...</p>}
+    {loadingCreate && <p>Creating new User...</p>}
+    {loadingList && <p>Loading the list with new User...</p>}
     <ul>
       {data ? data.users.map(user => <li key={user.id}>{user.name}</li>) : 'loading...'}
     </ul>
