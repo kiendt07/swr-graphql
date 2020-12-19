@@ -10,6 +10,7 @@ class Layout extends Component {
         <header>
             <ul>
                 <li><Link href="/"><a>Queries</a></Link></li>
+                <li><Link href="/not-optimistics-ui"><a>NOT Optimistic UI</a></Link></li>
                 <li><Link href="/optimistic-ui"><a>Optimistic UI</a></Link></li>
                 <li><Link href="/subscriptions"><a>Subscriptions</a></Link></li>
             </ul>
