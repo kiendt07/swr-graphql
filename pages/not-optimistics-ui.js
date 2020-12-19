@@ -21,8 +21,8 @@ export default function NotOptimisticUI() {
   async function handleSubmit(event) {
     event.preventDefault()
 
-    setLoadingCreate(true);
     // updating the data remotely, by calling the API
+    setLoadingCreate(true);
     const mutation = {
       'query': 'mutation users($name: String!) { insert_users(objects: [{name: $name}]) { affected_rows } }',
       'variables': { name: text }
@@ -30,8 +30,8 @@ export default function NotOptimisticUI() {
     await fetch(mutation);
     setLoadingCreate(false);
 
-    setLoadingList(true);
     // revalidate to update the data locally
+    setLoadingList(true);
     await trigger(mutation);
     setLoadingList(false);
 
